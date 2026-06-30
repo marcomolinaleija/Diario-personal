@@ -1,0 +1,39 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Diario privado</p>
+    <h1 id="page-title">Entradas</h1>
+  </div>
+  <a class="button button--primary" href="/entries/new">Crear entrada</a>
+</section>
+
+<form class="search-form" action="/" method="get" role="search">
+  <label for="q">Buscar en el diario</label>
+  <div class="search-form__row">
+    <input id="q" name="q" type="search" value="<%= locals.query %>" autocomplete="off">
+    <button class="button" type="submit">Buscar</button>
+  </div>
+</form>
+
+<% if (locals.entries.length === 0) { %>
+  <section class="empty-state" aria-labelledby="empty-title">
+    <h2 id="empty-title"><%= locals.query ? 'Sin resultados' : 'Todavía no hay entradas' %></h2>
+    <p><%= locals.query ? 'Prueba con otra búsqueda.' : 'Crea la primera entrada cuando quieras empezar.' %></p>
+  </section>
+<% } else { %>
+  <section class="entries-list" aria-label="Lista de entradas">
+    <% locals.entries.forEach((entry) => { %>
+      <article class="entry-card">
+        <div class="entry-card__meta">
+          <time datetime="<%= entry.entry_date %><%= entry.entry_time ? `T${entry.entry_time}` : '' %>"><%= locals.formatDateTime(entry.entry_date, entry.entry_time) %></time>
+        </div>
+        <h2><a href="/entries/<%= entry.id %>"><%= entry.title %></a></h2>
+        <p><%= locals.excerpt(entry.body) %></p>
+        <% if (entry.tags) { %><p class="tags"><%= entry.tags %></p><% } %>
+      </article>
+    <% }) %>
+  </section>
+<% } %>
+
+<%- include('../partials/foot.ejs', locals) %>

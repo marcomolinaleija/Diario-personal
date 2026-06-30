@@ -1,0 +1,41 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Calendario</p>
+    <h1 id="page-title"><%= locals.calendar.monthName %> <%= locals.calendar.year %></h1>
+  </div>
+  <div class="page-heading__actions">
+    <a class="button" href="/calendar/<%= locals.calendar.previous.year %>/<%= locals.calendar.previous.month %>">Mes anterior</a>
+    <a class="button" href="/calendar/<%= locals.calendar.next.year %>/<%= locals.calendar.next.month %>">Mes siguiente</a>
+  </div>
+</section>
+
+<section class="calendar-panel" aria-labelledby="calendar-title">
+  <h2 id="calendar-title" class="visually-hidden">Días de <%= locals.calendar.monthName %> <%= locals.calendar.year %></h2>
+  <div class="calendar-weekdays" aria-hidden="true">
+    <span>Lun</span>
+    <span>Mar</span>
+    <span>Mié</span>
+    <span>Jue</span>
+    <span>Vie</span>
+    <span>Sáb</span>
+    <span>Dom</span>
+  </div>
+  <ol class="calendar-grid">
+    <% locals.calendar.days.forEach((day) => { %>
+      <% if (!day) { %>
+        <li class="calendar-day calendar-day--empty" aria-hidden="true"></li>
+      <% } else { %>
+        <li class="calendar-day">
+          <a href="/calendar/<%= day.date.slice(0, 4) %>/<%= day.date.slice(5, 7) %>/<%= day.date.slice(8, 10) %>">
+            <time datetime="<%= day.date %>"><%= day.day %></time>
+            <span><%= day.totalEntries %> <%= day.totalEntries === 1 ? 'entrada' : 'entradas' %></span>
+          </a>
+        </li>
+      <% } %>
+    <% }) %>
+  </ol>
+</section>
+
+<%- include('../partials/foot.ejs', locals) %>

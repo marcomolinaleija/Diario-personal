@@ -1,0 +1,84 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="form-shell" aria-labelledby="page-title">
+  <a class="back-link" href="/">Volver a entradas</a>
+  <h1 id="page-title"><%= locals.mode === 'edit' ? 'Editar entrada' : 'Nueva entrada' %></h1>
+
+  <% if (locals.errors.form) { %>
+    <div class="alert alert--error" role="alert"><%= locals.errors.form %></div>
+  <% } %>
+
+  <form class="entry-form" action="<%= locals.action %>" method="post" data-writing-monitor novalidate>
+    <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+    <input type="hidden" name="writingStartedAt" value="<%= locals.values.writingStartedAt || '' %>">
+    <input type="hidden" name="writingEndedAt" value="<%= locals.values.writingEndedAt || '' %>">
+
+    <div class="field">
+      <label for="title">Título <span aria-hidden="true">*</span></label>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        maxlength="160"
+        value="<%= locals.values.title %>"
+        required
+        aria-describedby="<%= locals.errors.title ? 'title-error' : 'title-help' %>"
+        aria-invalid="<%= locals.errors.title ? 'true' : 'false' %>"
+      >
+      <p class="field-help" id="title-help">Máximo 160 caracteres.</p>
+      <%- include('../partials/field-error.ejs', { message: locals.errors.title, id: 'title-error' }) %>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label for="entryDate">Fecha <span aria-hidden="true">*</span></label>
+        <input
+          id="entryDate"
+          name="entryDate"
+          type="date"
+          value="<%= locals.values.entryDate %>"
+          required
+          aria-describedby="<%= locals.errors.entryDate ? 'entry-date-error' : '' %>"
+          aria-invalid="<%= locals.errors.entryDate ? 'true' : 'false' %>"
+        >
+        <%- include('../partials/field-error.ejs', { message: locals.errors.entryDate, id: 'entry-date-error' }) %>
+      </div>
+
+      <div class="field">
+        <label for="entryTime">Hora</label>
+        <input
+          id="entryTime"
+          name="entryTime"
+          type="time"
+          value="<%= locals.values.entryTime || '' %>"
+        >
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="body">Entrada <span aria-hidden="true">*</span></label>
+      <textarea
+        id="body"
+        name="body"
+        rows="14"
+        required
+        aria-describedby="<%= locals.errors.body ? 'body-error' : 'body-help' %>"
+        aria-invalid="<%= locals.errors.body ? 'true' : 'false' %>"
+      ><%= locals.values.body %></textarea>
+      <p class="field-help" id="body-help">Escribe con calma. Se guardan los saltos de párrafo.</p>
+      <%- include('../partials/field-error.ejs', { message: locals.errors.body, id: 'body-error' }) %>
+    </div>
+
+    <div class="field">
+      <label for="tags">Etiquetas</label>
+      <input id="tags" name="tags" type="text" maxlength="300" value="<%= locals.values.tags || '' %>" autocomplete="off">
+    </div>
+
+    <div class="form-actions">
+      <button class="button button--primary" type="submit">Guardar</button>
+      <a class="button" href="/">Cancelar</a>
+    </div>
+  </form>
+</section>
+
+<%- include('../partials/foot.ejs', locals) %>

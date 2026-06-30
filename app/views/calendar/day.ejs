@@ -1,0 +1,31 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Calendario</p>
+    <h1 id="page-title"><%= locals.formatDate(locals.day.date) %></h1>
+  </div>
+  <a class="button" href="/calendar/<%= locals.day.date.slice(0, 4) %>/<%= locals.day.date.slice(5, 7) %>">Volver al mes</a>
+</section>
+
+<% if (locals.day.entries.length === 0) { %>
+  <section class="empty-state" aria-labelledby="empty-title">
+    <h2 id="empty-title">Sin entradas</h2>
+    <p>No hay entradas registradas para este día.</p>
+    <a class="button button--primary" href="/entries/new">Crear entrada</a>
+  </section>
+<% } else { %>
+  <section class="entries-list" aria-label="Entradas de este día">
+    <% locals.day.entries.forEach((entry) => { %>
+      <article class="entry-card">
+        <div class="entry-card__meta">
+          <time datetime="<%= entry.entry_date %><%= entry.entry_time ? `T${entry.entry_time}` : '' %>"><%= locals.formatDateTime(entry.entry_date, entry.entry_time) %></time>
+        </div>
+        <h2><a href="/entries/<%= entry.id %>"><%= entry.title %></a></h2>
+        <p><%= locals.excerpt(entry.body) %></p>
+      </article>
+    <% }) %>
+  </section>
+<% } %>
+
+<%- include('../partials/foot.ejs', locals) %>

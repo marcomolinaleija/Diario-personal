@@ -1,0 +1,17 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="confirm-panel" aria-labelledby="page-title">
+  <a class="back-link" href="/entries/<%= locals.entry.id %>">Volver a la entrada</a>
+  <h1 id="page-title">Eliminar entrada</h1>
+  <p>Vas a eliminar <strong><%= locals.entry.title %></strong>. Esta acción no se puede deshacer.</p>
+
+  <form action="/entries/<%= locals.entry.id %>/delete" method="post">
+    <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+    <div class="form-actions">
+      <button class="button button--danger" type="submit">Eliminar definitivamente</button>
+      <a class="button" href="/entries/<%= locals.entry.id %>">Cancelar</a>
+    </div>
+  </form>
+</section>
+
+<%- include('../partials/foot.ejs', locals) %>

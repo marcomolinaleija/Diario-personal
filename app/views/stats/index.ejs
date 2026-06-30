@@ -1,0 +1,148 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Resumen del diario</p>
+    <h1 id="page-title">Estadísticas</h1>
+  </div>
+  <div class="page-heading__actions">
+    <a class="button" href="/export/diario.md">Exportar todo .md</a>
+    <a class="button" href="/export/diario.json">Exportar todo .json</a>
+    <a class="button button--primary" href="/export/diario.zip">Exportar todo .zip</a>
+  </div>
+</section>
+
+<section class="stats-grid" aria-label="Resumen general">
+  <article class="stat-card">
+    <p>Total de entradas</p>
+    <strong><%= locals.stats.overview.totalEntries %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Caracteres escritos</p>
+    <strong><%= locals.stats.overview.totalCharacters %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Palabras aproximadas</p>
+    <strong><%= locals.stats.overview.totalWords %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Periodo</p>
+    <strong>
+      <% if (locals.stats.overview.firstEntryDate) { %>
+        <%= locals.formatDate(locals.stats.overview.firstEntryDate) %> - <%= locals.formatDate(locals.stats.overview.lastEntryDate) %>
+      <% } else { %>
+        Sin entradas
+      <% } %>
+    </strong>
+  </article>
+  <article class="stat-card">
+    <p>Racha activa</p>
+    <strong><%= locals.stats.streak.activeStreak %> <%= locals.stats.streak.activeStreak === 1 ? 'día' : 'días' %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Racha más larga</p>
+    <strong><%= locals.stats.streak.longestStreak %> <%= locals.stats.streak.longestStreak === 1 ? 'día' : 'días' %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Días escritos</p>
+    <strong><%= locals.stats.streak.totalWritingDays %></strong>
+  </article>
+  <article class="stat-card">
+    <p>Última entrada</p>
+    <strong>
+      <% if (locals.stats.streak.lastEntryDate) { %>
+        <%= locals.stats.streak.daysSinceLastEntry === 0 ? 'Hoy' : `${locals.stats.streak.daysSinceLastEntry} días` %>
+      <% } else { %>
+        Sin entradas
+      <% } %>
+    </strong>
+  </article>
+</section>
+
+<section class="data-section" aria-labelledby="notifications-title">
+  <h2 id="notifications-title">Recordatorios de racha</h2>
+  <p>
+    Estado:
+    <strong><%= locals.stats.notifications.enabled ? 'activados' : 'desactivados' %></strong>.
+    Destino: <%= locals.stats.notifications.recipient %>.
+    Hora de revisión: <%= locals.stats.notifications.checkHour %>:00.
+  </p>
+  <details>
+    <summary>Ver escenarios contemplados</summary>
+    <ul class="scenario-list">
+      <% locals.stats.notifications.scenarios.forEach((scenario) => { %>
+        <li><%= scenario %></li>
+      <% }) %>
+    </ul>
+  </details>
+</section>
+
+<section class="data-section" aria-labelledby="years-title">
+  <h2 id="years-title">Entradas por año</h2>
+  <% if (locals.stats.byYear.length === 0) { %>
+    <p>No hay entradas todavía.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Año</th>
+            <th scope="col">Entradas</th>
+            <th scope="col">Caracteres</th>
+            <th scope="col">Exportar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% locals.stats.byYear.forEach((row) => { %>
+            <tr>
+              <th scope="row"><%= row.year %></th>
+              <td><%= row.totalEntries %></td>
+              <td><%= row.totalCharacters %></td>
+              <td class="table-actions">
+                <a href="/export/<%= row.year %>/diario.md">.md</a>
+                <a href="/export/<%= row.year %>/diario.json">.json</a>
+                <a href="/export/<%= row.year %>/diario.zip">.zip</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="data-section" aria-labelledby="months-title">
+  <h2 id="months-title">Entradas por mes</h2>
+  <% if (locals.stats.byMonth.length === 0) { %>
+    <p>No hay entradas todavía.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Mes</th>
+            <th scope="col">Entradas</th>
+            <th scope="col">Caracteres</th>
+            <th scope="col">Exportar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% locals.stats.byMonth.forEach((row) => { %>
+            <tr>
+              <th scope="row"><%= row.year %>-<%= row.month %></th>
+              <td><%= row.totalEntries %></td>
+              <td><%= row.totalCharacters %></td>
+              <td class="table-actions">
+                <a href="/export/<%= row.year %>/<%= row.month %>/diario.md">.md</a>
+                <a href="/export/<%= row.year %>/<%= row.month %>/diario.json">.json</a>
+                <a href="/export/<%= row.year %>/<%= row.month %>/diario.zip">.zip</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/foot.ejs', locals) %>

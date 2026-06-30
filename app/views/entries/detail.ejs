@@ -1,0 +1,84 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<article class="entry-detail">
+  <header class="entry-detail__header">
+    <a class="back-link" href="/">Volver a entradas</a>
+    <p class="eyebrow">
+      <time datetime="<%= locals.entry.entry_date %><%= locals.entry.entry_time ? `T${locals.entry.entry_time}` : '' %>">
+        <%= locals.formatDateTime(locals.entry.entry_date, locals.entry.entry_time) %>
+      </time>
+    </p>
+    <h1><%= locals.entry.title %></h1>
+    <div class="entry-detail__actions" aria-label="Acciones de la entrada">
+      <a class="button" href="/entries/<%= locals.entry.id %>/edit">Editar</a>
+      <a class="button" href="/entries/<%= locals.entry.id %>/export.md">Exportar Markdown</a>
+      <a class="button" href="/entries/<%= locals.entry.id %>/export.json">Exportar JSON</a>
+      <a class="button" href="/entries/<%= locals.entry.id %>/export.zip">Exportar ZIP</a>
+      <a class="button button--danger" href="/entries/<%= locals.entry.id %>/delete">Eliminar</a>
+    </div>
+  </header>
+
+  <% if (locals.entry.tags || locals.entry.writing_started_at || locals.entry.writing_ended_at) { %>
+    <dl class="entry-facts">
+      <% if (locals.entry.tags) { %>
+        <div>
+          <dt>Etiquetas</dt>
+          <dd><%= locals.entry.tags %></dd>
+        </div>
+      <% } %>
+      <% if (locals.entry.writing_started_at && locals.entry.writing_ended_at) { %>
+        <div>
+          <dt>Escritura</dt>
+          <dd><%= locals.formatWritingRange(locals.entry.writing_started_at, locals.entry.writing_ended_at) %></dd>
+        </div>
+      <% } %>
+    </dl>
+  <% } %>
+
+  <div class="prose">
+    <%- locals.renderMarkdown(locals.entry.body, locals.attachments) %>
+  </div>
+
+  <section class="attachments-panel" aria-labelledby="attachments-title">
+    <h2 id="attachments-title">Adjuntos</h2>
+
+    <% if (locals.attachmentError) { %>
+      <div class="alert alert--error" role="alert"><%= locals.attachmentError %></div>
+    <% } %>
+
+    <form class="attachment-form" action="/entries/<%= locals.entry.id %>/attachments?_csrf=<%= locals.csrfToken %>" method="post" enctype="multipart/form-data">
+      <div class="field">
+        <label for="attachment">Subir adjunto pequeño</label>
+        <input id="attachment" name="attachment" type="file">
+        <p class="field-help">Máximo 5 MB. Puedes usar imágenes, texto, PDF o audio.</p>
+      </div>
+      <button class="button" type="submit">Subir adjunto</button>
+    </form>
+
+    <% if (locals.attachments.length > 0) { %>
+      <ul class="attachment-list">
+        <% locals.attachments.forEach((attachment) => { %>
+          <li>
+            <div>
+              <strong><%= attachment.original_name %></strong>
+              <code>[[attachment:<%= attachment.id %>]]</code>
+            </div>
+            <div class="attachment-actions">
+              <a href="/attachments/<%= attachment.id %>/download">Descargar</a>
+              <form action="/attachments/<%= attachment.id %>/delete" method="post">
+                <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                <button class="link-button" type="submit">Eliminar</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+
+  <footer class="entry-detail__footer">
+    <a class="button" href="/">Volver a la lista de entradas</a>
+  </footer>
+</article>
+
+<%- include('../partials/foot.ejs', locals) %>

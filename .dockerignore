@@ -1,0 +1,9 @@
+node_modules
+app/node_modules
+app/data
+npm-debug.log
+data/*.sqlite
+data/*.sqlite-*
+data/attachments
+.git
+.env
