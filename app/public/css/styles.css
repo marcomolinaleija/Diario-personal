@@ -449,7 +449,8 @@ textarea[aria-invalid="true"] {
 }
 
 .calendar-panel,
-.attachments-panel {
+.attachments-panel,
+.milestones-panel {
   border: 1px solid var(--line);
   border-radius: 0.5rem;
   background: var(--surface);
@@ -508,20 +509,33 @@ textarea[aria-invalid="true"] {
   font-weight: 700;
 }
 
-.attachments-panel {
+.calendar-day .milestone-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+}
+
+.attachments-panel,
+.milestones-panel {
   margin-top: 2rem;
 }
 
-.attachments-panel h2 {
+.attachments-panel h2,
+.milestones-panel h2 {
   margin-bottom: 1rem;
 }
 
-.attachment-form {
+.attachment-form,
+.milestone-form {
   display: grid;
   gap: 0.75rem;
 }
 
-.attachment-list {
+.attachment-list,
+.milestone-list {
   display: grid;
   gap: 0.75rem;
   padding: 0;
@@ -529,7 +543,8 @@ textarea[aria-invalid="true"] {
   list-style: none;
 }
 
-.attachment-list li {
+.attachment-list li,
+.milestone-list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -537,6 +552,17 @@ textarea[aria-invalid="true"] {
   padding: 0.8rem;
   border: 1px solid var(--line);
   border-radius: 0.5rem;
+}
+
+.milestone-list time {
+  display: block;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.milestone-list p {
+  margin: 0.35rem 0 0;
 }
 
 .attachment-list code {
@@ -673,7 +699,8 @@ tbody tr:last-child td {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .attachment-list li {
+  .attachment-list li,
+  .milestone-list li {
     align-items: stretch;
     flex-direction: column;
   }

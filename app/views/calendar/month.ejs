@@ -31,6 +31,9 @@
           <a href="/calendar/<%= day.date.slice(0, 4) %>/<%= day.date.slice(5, 7) %>/<%= day.date.slice(8, 10) %>">
             <time datetime="<%= day.date %>"><%= day.day %></time>
             <span><%= day.totalEntries %> <%= day.totalEntries === 1 ? 'entrada' : 'entradas' %></span>
+            <% if (day.totalMilestones > 0) { %>
+              <span class="milestone-badge"><%= day.totalMilestones %> <%= day.totalMilestones === 1 ? 'hito' : 'hitos' %></span>
+            <% } %>
           </a>
         </li>
       <% } %>

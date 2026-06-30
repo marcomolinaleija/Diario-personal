@@ -36,3 +36,16 @@ CREATE TABLE IF NOT EXISTS notification_log (
   sent_at TEXT NOT NULL,
   UNIQUE (scenario_key, notification_date)
 );
+
+CREATE TABLE IF NOT EXISTS milestones (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  entry_id INTEGER,
+  title TEXT NOT NULL,
+  description TEXT,
+  milestone_date TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_milestones_date ON milestones(milestone_date DESC);
+CREATE INDEX IF NOT EXISTS idx_milestones_entry_id ON milestones(entry_id);

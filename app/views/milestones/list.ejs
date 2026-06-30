@@ -1,0 +1,35 @@
+<%- include('../partials/head.ejs', locals) %>
+
+<section class="page-heading" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Memoria personal</p>
+    <h1 id="page-title">Hitos personales</h1>
+  </div>
+  <a class="button" href="/">Volver a entradas</a>
+</section>
+
+<% if (locals.milestones.length === 0) { %>
+  <section class="empty-state" aria-labelledby="empty-title">
+    <h2 id="empty-title">Todavía no hay hitos</h2>
+    <p>Marca días especiales desde la lectura de una entrada.</p>
+  </section>
+<% } else { %>
+  <section class="data-section" aria-label="Lista de hitos personales">
+    <ul class="milestone-list">
+      <% locals.milestones.forEach((milestone) => { %>
+        <li>
+          <div>
+            <strong><%= milestone.title %></strong>
+            <time datetime="<%= milestone.milestone_date %>"><%= locals.formatDate(milestone.milestone_date) %></time>
+            <% if (milestone.description) { %><p><%= milestone.description %></p><% } %>
+          </div>
+          <% if (milestone.entry_id) { %>
+            <a href="/entries/<%= milestone.entry_id %>">Ver entrada</a>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+  </section>
+<% } %>
+
+<%- include('../partials/foot.ejs', locals) %>

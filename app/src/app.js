@@ -16,6 +16,7 @@ import { registerAttachmentsRoutes } from './routes/attachments-routes.js';
 import { registerEntriesRoutes } from './routes/entries-routes.js';
 import { registerExportRoutes } from './routes/export-routes.js';
 import { registerHealthRoutes } from './routes/health-routes.js';
+import { registerMilestonesRoutes } from './routes/milestones-routes.js';
 import { registerStatsRoutes } from './routes/stats-routes.js';
 import { startStreakNotificationScheduler } from './services/streak-notification-service.js';
 
@@ -82,6 +83,7 @@ export async function buildApp() {
 
   await app.register(registerHealthRoutes);
   await app.register(registerCalendarRoutes);
+  await app.register(registerMilestonesRoutes);
   await app.register(registerStatsRoutes);
   await app.register(registerExportRoutes);
   await app.register(registerAttachmentsRoutes);

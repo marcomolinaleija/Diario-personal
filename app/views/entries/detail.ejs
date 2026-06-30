@@ -39,6 +39,51 @@
     <%- locals.renderMarkdown(locals.entry.body, locals.attachments) %>
   </div>
 
+  <section class="milestones-panel" aria-labelledby="entry-milestones-title">
+    <h2 id="entry-milestones-title">Hitos personales</h2>
+
+    <% if (locals.milestoneError) { %>
+      <div class="alert alert--error" role="alert"><%= locals.milestoneError %></div>
+    <% } %>
+
+    <% if (locals.milestones.length > 0) { %>
+      <ul class="milestone-list">
+        <% locals.milestones.forEach((milestone) => { %>
+          <li>
+            <div>
+              <strong><%= milestone.title %></strong>
+              <time datetime="<%= milestone.milestone_date %>"><%= locals.formatDate(milestone.milestone_date) %></time>
+              <% if (milestone.description) { %><p><%= milestone.description %></p><% } %>
+            </div>
+            <form action="/milestones/<%= milestone.id %>/delete" method="post">
+              <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+              <button class="link-button" type="submit">Eliminar</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <form class="milestone-form" action="/entries/<%= locals.entry.id %>/milestones" method="post">
+      <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+      <div class="field-grid">
+        <div class="field">
+          <label for="milestone-title">Título del hito</label>
+          <input id="milestone-title" name="title" type="text" maxlength="160" placeholder="Ej. Comencé un nuevo empleo">
+        </div>
+        <div class="field">
+          <label for="milestone-date">Fecha</label>
+          <input id="milestone-date" name="milestoneDate" type="date" value="<%= locals.entry.entry_date %>">
+        </div>
+      </div>
+      <div class="field">
+        <label for="milestone-description">Descripción</label>
+        <textarea id="milestone-description" name="description" rows="3" maxlength="1000"></textarea>
+      </div>
+      <button class="button" type="submit">Marcar hito</button>
+    </form>
+  </section>
+
   <section class="attachments-panel" aria-labelledby="attachments-title">
     <h2 id="attachments-title">Adjuntos</h2>
 

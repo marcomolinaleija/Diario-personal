@@ -8,6 +8,25 @@
   <a class="button" href="/calendar/<%= locals.day.date.slice(0, 4) %>/<%= locals.day.date.slice(5, 7) %>">Volver al mes</a>
 </section>
 
+<% if (locals.day.milestones.length > 0) { %>
+  <section class="data-section" aria-labelledby="milestones-title">
+    <h2 id="milestones-title">Hitos de este día</h2>
+    <ul class="milestone-list">
+      <% locals.day.milestones.forEach((milestone) => { %>
+        <li>
+          <div>
+            <strong><%= milestone.title %></strong>
+            <% if (milestone.description) { %><p><%= milestone.description %></p><% } %>
+          </div>
+          <% if (milestone.entry_id) { %>
+            <a href="/entries/<%= milestone.entry_id %>">Ver entrada</a>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+  </section>
+<% } %>
+
 <% if (locals.day.entries.length === 0) { %>
   <section class="empty-state" aria-labelledby="empty-title">
     <h2 id="empty-title">Sin entradas</h2>

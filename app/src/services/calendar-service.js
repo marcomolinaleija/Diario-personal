@@ -1,4 +1,5 @@
 import { createEntriesRepository } from '../repositories/entries-repository.js';
+import { createMilestonesRepository } from '../repositories/milestones-repository.js';
 import { todayForInput } from '../utils/datetime.js';
 
 const MONTH_NAMES = [
@@ -18,6 +19,7 @@ const MONTH_NAMES = [
 
 export function createCalendarService() {
   const repository = createEntriesRepository();
+  const milestones = createMilestonesRepository();
 
   return {
     getMonth(yearInput, monthInput) {
@@ -25,22 +27,25 @@ export function createCalendarService() {
       const year = normalizeYear(yearInput) || fallback.slice(0, 4);
       const month = normalizeMonth(monthInput) || fallback.slice(5, 7);
       const rows = repository.calendarMonth(year, month);
+      const milestoneRows = milestones.calendarMonth(year, month);
       const countsByDate = Object.fromEntries(rows.map((row) => [row.date, row.totalEntries]));
+      const milestoneCountsByDate = Object.fromEntries(milestoneRows.map((row) => [row.date, row.totalMilestones]));
 
-      return buildMonth(year, month, countsByDate);
+      return buildMonth(year, month, countsByDate, milestoneCountsByDate);
     },
 
     getDay(date) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) return null;
       return {
         date,
-        entries: repository.listByDate(date)
+        entries: repository.listByDate(date),
+        milestones: milestones.listByDate(date)
       };
     }
   };
 }
 
-function buildMonth(year, month, countsByDate) {
+function buildMonth(year, month, countsByDate, milestoneCountsByDate) {
   const monthIndex = Number(month) - 1;
   const first = new Date(Date.UTC(Number(year), monthIndex, 1));
   const daysInMonth = new Date(Date.UTC(Number(year), monthIndex + 1, 0)).getUTCDate();
@@ -56,7 +61,8 @@ function buildMonth(year, month, countsByDate) {
     days.push({
       day,
       date,
-      totalEntries: countsByDate[date] || 0
+      totalEntries: countsByDate[date] || 0,
+      totalMilestones: milestoneCountsByDate[date] || 0
     });
   }
 

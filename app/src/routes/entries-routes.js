@@ -2,10 +2,12 @@ import { createEntriesService } from '../services/entries-service.js';
 import { createAttachmentsService } from '../services/attachments-service.js';
 import { timeForInput, todayForInput } from '../utils/datetime.js';
 import { baseViewData } from '../utils/view-data.js';
+import { createMilestonesService } from '../services/milestones-service.js';
 
 export async function registerEntriesRoutes(app) {
   const entries = createEntriesService();
   const attachments = createAttachmentsService();
+  const milestones = createMilestonesService();
 
   app.get('/', async (request, reply) => {
     const query = String(request.query.q || '').trim();
@@ -50,7 +52,9 @@ export async function registerEntriesRoutes(app) {
       title: entry.title,
       entry,
       attachments: attachments.listForEntry(entry.id),
-      attachmentError: request.query.attachmentError || ''
+      milestones: milestones.listForEntry(entry.id),
+      attachmentError: request.query.attachmentError || '',
+      milestoneError: request.query.milestoneError || ''
     }));
   });
 
