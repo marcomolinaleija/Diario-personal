@@ -3,6 +3,7 @@ import { createAttachmentsService } from '../services/attachments-service.js';
 import { timeForInput, todayForInput } from '../utils/datetime.js';
 import { baseViewData } from '../utils/view-data.js';
 import { createMilestonesService } from '../services/milestones-service.js';
+import { buildPagination, getPaginationParams, pageUrl } from '../utils/pagination.js';
 
 export async function registerEntriesRoutes(app) {
   const entries = createEntriesService();
@@ -11,10 +12,24 @@ export async function registerEntriesRoutes(app) {
 
   app.get('/', async (request, reply) => {
     const query = String(request.query.q || '').trim();
+    const paginationParams = getPaginationParams(request.query);
+    const result = entries.listEntriesPage({ query, ...paginationParams });
+    const totalPages = Math.max(1, Math.ceil(result.totalItems / paginationParams.perPage));
+
+    if (paginationParams.page > totalPages) {
+      return reply.redirect(pageUrl('/', { q: query }, totalPages, paginationParams.perPage));
+    }
+
     return reply.view('entries/list.ejs', baseViewData(reply, {
       title: 'Entradas',
-      entries: entries.listEntries({ query }),
-      query
+      entries: result.entries,
+      query,
+      pagination: buildPagination({
+        ...paginationParams,
+        totalItems: result.totalItems,
+        path: '/',
+        query: { q: query }
+      })
     }));
   });
 

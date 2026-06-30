@@ -224,12 +224,34 @@ h2 {
   gap: 0.75rem;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.pagination__size,
+.pagination__nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.pagination select {
+  width: auto;
+  min-width: 5rem;
+}
+
 label {
   display: block;
   font-weight: 800;
 }
 
 input,
+select,
 textarea {
   width: 100%;
   min-height: 2.9rem;
@@ -680,6 +702,7 @@ tbody tr:last-child td {
   .site-header__inner,
   .page-heading,
   .search-form__row,
+  .pagination,
   .page-heading__actions {
     align-items: stretch;
     flex-direction: column;

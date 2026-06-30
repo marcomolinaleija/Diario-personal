@@ -14,6 +14,7 @@ Este proyecto es un diario personal autoalojado, pensado para ejecutarse en una 
 ## Lectura
 
 - Lista de entradas ordenada por fecha.
+- Paginación configurable en la lista de entradas.
 - Vista de lectura individual.
 - Enlaces para volver a la lista desde la parte superior e inferior de la entrada.
 - Búsqueda por título, contenido y etiquetas.
@@ -64,6 +65,7 @@ Si una entrada se elimina, también se eliminan sus adjuntos físicos.
 - Racha más larga.
 - Días escritos.
 - Última entrada registrada.
+- Paginación configurable en la lista de hitos personales.
 
 ## Rachas y Recordatorios
 

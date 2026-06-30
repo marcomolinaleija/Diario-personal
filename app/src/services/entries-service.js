@@ -10,6 +10,13 @@ export function createEntriesService() {
       return repository.list(filters);
     },
 
+    listEntriesPage(filters) {
+      return {
+        entries: repository.listPaginated(filters),
+        totalItems: repository.count(filters)
+      };
+    },
+
     getEntry(id) {
       const parsedId = parseId(id);
       if (!parsedId) return null;

@@ -1,13 +1,27 @@
 import { createMilestonesService } from '../services/milestones-service.js';
+import { buildPagination, getPaginationParams, pageUrl } from '../utils/pagination.js';
 import { baseViewData } from '../utils/view-data.js';
 
 export async function registerMilestonesRoutes(app) {
   const milestones = createMilestonesService();
 
-  app.get('/milestones', async (_request, reply) => {
+  app.get('/milestones', async (request, reply) => {
+    const paginationParams = getPaginationParams(request.query);
+    const result = milestones.listMilestonesPage(paginationParams);
+    const totalPages = Math.max(1, Math.ceil(result.totalItems / paginationParams.perPage));
+
+    if (paginationParams.page > totalPages) {
+      return reply.redirect(pageUrl('/milestones', {}, totalPages, paginationParams.perPage));
+    }
+
     return reply.view('milestones/list.ejs', baseViewData(reply, {
       title: 'Hitos personales',
-      milestones: milestones.listMilestones()
+      milestones: result.milestones,
+      pagination: buildPagination({
+        ...paginationParams,
+        totalItems: result.totalItems,
+        path: '/milestones'
+      })
     }));
   });
 

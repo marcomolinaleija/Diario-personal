@@ -14,6 +14,13 @@ export function createMilestonesService() {
       return milestones.listAll();
     },
 
+    listMilestonesPage(filters) {
+      return {
+        milestones: milestones.listPaginated(filters),
+        totalItems: milestones.count()
+      };
+    },
+
     listForEntry(entryId) {
       const parsedEntryId = parseId(entryId);
       if (!parsedEntryId) return [];

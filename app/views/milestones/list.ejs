@@ -8,6 +8,14 @@
   <a class="button" href="/">Volver a entradas</a>
 </section>
 
+<%- include('../partials/pagination.ejs', {
+  action: '/milestones',
+  id: 'milestones',
+  label: 'hitos',
+  pagination: locals.pagination,
+  query: {}
+}) %>
+
 <% if (locals.milestones.length === 0) { %>
   <section class="empty-state" aria-labelledby="empty-title">
     <h2 id="empty-title">Todavía no hay hitos</h2>
@@ -31,5 +39,13 @@
     </ul>
   </section>
 <% } %>
+
+<%- include('../partials/pagination.ejs', {
+  action: '/milestones',
+  id: 'milestones-bottom',
+  label: 'hitos',
+  pagination: locals.pagination,
+  query: {}
+}) %>
 
 <%- include('../partials/foot.ejs', locals) %>

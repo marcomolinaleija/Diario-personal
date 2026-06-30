@@ -12,9 +12,18 @@
   <label for="q">Buscar en el diario</label>
   <div class="search-form__row">
     <input id="q" name="q" type="search" value="<%= locals.query %>" autocomplete="off">
+    <input type="hidden" name="perPage" value="<%= locals.pagination.perPage %>">
     <button class="button" type="submit">Buscar</button>
   </div>
 </form>
+
+<%- include('../partials/pagination.ejs', {
+  action: '/',
+  id: 'entries',
+  label: 'entradas',
+  pagination: locals.pagination,
+  query: { q: locals.query }
+}) %>
 
 <% if (locals.entries.length === 0) { %>
   <section class="empty-state" aria-labelledby="empty-title">
@@ -35,5 +44,13 @@
     <% }) %>
   </section>
 <% } %>
+
+<%- include('../partials/pagination.ejs', {
+  action: '/',
+  id: 'entries-bottom',
+  label: 'entradas',
+  pagination: locals.pagination,
+  query: { q: locals.query }
+}) %>
 
 <%- include('../partials/foot.ejs', locals) %>

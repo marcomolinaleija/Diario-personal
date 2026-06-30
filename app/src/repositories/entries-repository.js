@@ -11,6 +11,14 @@ const listSql = `
   ORDER BY entry_date DESC, updated_at DESC
 `;
 
+const filteredEntriesWhereSql = `
+  WHERE
+    @query IS NULL
+    OR title LIKE @likeQuery
+    OR body LIKE @likeQuery
+    OR tags LIKE @likeQuery
+`;
+
 export function createEntriesRepository() {
   const db = getDatabase();
 
@@ -21,6 +29,40 @@ export function createEntriesRepository() {
         query: normalizedQuery || null,
         likeQuery: `%${normalizedQuery}%`
       });
+    },
+
+    listPaginated({ query = '', limit, offset } = {}) {
+      const normalizedQuery = query.trim();
+      return db
+        .prepare(`
+          SELECT id, title, body, mood, tags, entry_date, entry_time, writing_started_at, writing_ended_at, created_at, updated_at
+          FROM entries
+          ${filteredEntriesWhereSql}
+          ORDER BY entry_date DESC, updated_at DESC
+          LIMIT @limit OFFSET @offset
+        `)
+        .all({
+          query: normalizedQuery || null,
+          likeQuery: `%${normalizedQuery}%`,
+          limit,
+          offset
+        });
+    },
+
+    count({ query = '' } = {}) {
+      const normalizedQuery = query.trim();
+      const row = db
+        .prepare(`
+          SELECT COUNT(*) AS total
+          FROM entries
+          ${filteredEntriesWhereSql}
+        `)
+        .get({
+          query: normalizedQuery || null,
+          likeQuery: `%${normalizedQuery}%`
+        });
+
+      return row.total;
     },
 
     findById(id) {

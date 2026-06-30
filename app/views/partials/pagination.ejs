@@ -1,0 +1,29 @@
+<% if (locals.pagination) { %>
+  <nav class="pagination" aria-label="Paginación">
+    <form class="pagination__size" action="<%= locals.action %>" method="get">
+      <% Object.entries(locals.query || {}).forEach(([key, value]) => { %>
+        <% if (value) { %>
+          <input type="hidden" name="<%= key %>" value="<%= value %>">
+        <% } %>
+      <% }) %>
+      <label for="<%= locals.id %>-per-page">Mostrar</label>
+      <select id="<%= locals.id %>-per-page" name="perPage" onchange="this.form.submit()">
+        <% locals.pagination.options.forEach((option) => { %>
+          <option value="<%= option %>" <% if (option === locals.pagination.perPage) { %>selected<% } %>><%= option %></option>
+        <% }) %>
+      </select>
+      <span><%= locals.label %></span>
+      <button class="button" type="submit">Aplicar</button>
+    </form>
+
+    <div class="pagination__nav">
+      <% if (locals.pagination.hasPrevious) { %>
+        <a class="button" href="<%= locals.pagination.previousUrl %>">Anterior</a>
+      <% } %>
+      <span>Página <%= locals.pagination.page %> de <%= locals.pagination.totalPages %> · <%= locals.pagination.totalItems %> en total</span>
+      <% if (locals.pagination.hasNext) { %>
+        <a class="button" href="<%= locals.pagination.nextUrl %>">Siguiente</a>
+      <% } %>
+    </div>
+  </nav>
+<% } %>

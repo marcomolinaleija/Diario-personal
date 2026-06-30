@@ -14,6 +14,22 @@ export function createMilestonesRepository() {
         .all();
     },
 
+    listPaginated({ limit, offset } = {}) {
+      return db
+        .prepare(`
+          SELECT id, entry_id, title, description, milestone_date, created_at
+          FROM milestones
+          ORDER BY milestone_date DESC, created_at DESC
+          LIMIT @limit OFFSET @offset
+        `)
+        .all({ limit, offset });
+    },
+
+    count() {
+      const row = db.prepare('SELECT COUNT(*) AS total FROM milestones').get();
+      return row.total;
+    },
+
     listByEntryId(entryId) {
       return db
         .prepare(`
