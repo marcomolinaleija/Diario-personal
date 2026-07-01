@@ -1,0 +1,13 @@
+services:
+  diario:
+    image: ghcr.io/marcomolinaleija/diario-personal:${IMAGE_TAG:-latest}
+    container_name: diario-privado
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${PUBLISHED_HOST:-127.0.0.1}:3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data:/app/data

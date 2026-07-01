@@ -45,12 +45,4 @@
   </section>
 <% } %>
 
-<%- include('../partials/pagination.ejs', {
-  action: '/',
-  id: 'entries-bottom',
-  label: 'entradas',
-  pagination: locals.pagination,
-  query: { q: locals.query }
-}) %>
-
 <%- include('../partials/foot.ejs', locals) %>

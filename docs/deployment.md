@@ -9,6 +9,40 @@
 docker compose up -d --build
 ```
 
+Si prefieres usar la imagen publicada en GHCR en vez de construir localmente:
+
+```bash
+docker compose -f docker-compose.image.yml pull
+docker compose -f docker-compose.image.yml up -d
+```
+
+Imagen:
+
+```txt
+ghcr.io/marcomolinaleija/diario-personal:latest
+```
+
+Para fijar una version concreta:
+
+```bash
+IMAGE_TAG=v1.0.0 docker compose -f docker-compose.image.yml pull
+IMAGE_TAG=v1.0.0 docker compose -f docker-compose.image.yml up -d
+```
+
+Para volver a una version anterior:
+
+```bash
+IMAGE_TAG=v0.9.0 docker compose -f docker-compose.image.yml pull
+IMAGE_TAG=v0.9.0 docker compose -f docker-compose.image.yml up -d
+```
+
+Publicar una nueva version:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
 5. Comprueba el estado:
 
 ```bash
@@ -35,6 +69,40 @@ Para backup, respalda ambos:
 ./data/diario.sqlite
 ./data/attachments/
 ```
+
+## Backups con Backblaze B2
+
+El script `scripts/backup-diario.sh` crea una copia consistente de SQLite, incluye adjuntos y sube un `.tar.gz` a Backblaze mediante `rclone`.
+
+Valores por defecto:
+
+```txt
+RCLONE_REMOTE=b2diario:diario-personal-backups
+RCLONE_PREFIX=backups/diario/daily
+LOCAL_RETENTION_DAYS=14
+BACKUP_MAIL_ENABLED=true
+```
+
+Ejecutar manualmente:
+
+```bash
+./scripts/backup-diario.sh
+```
+
+El archivo subido contiene:
+
+```txt
+diario/
+  diario.sqlite
+  attachments/
+  README.txt
+```
+
+Los backups locales quedan en `./data/backups/` y no se versionan.
+
+Si `MAIL_ENABLED=true`, el script envia correo cuando el backup se completa o falla. Para mantener los recordatorios del diario activos pero silenciar los correos de backup, ejecuta el script con `BACKUP_MAIL_ENABLED=false`.
+
+El servicio de `systemd` incluido en `deploy/` ejecuta el backup como el usuario `marco` para usar su configuracion de `rclone`.
 
 ## Correo de racha
 

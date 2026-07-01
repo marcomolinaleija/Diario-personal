@@ -1,0 +1,10 @@
+[Unit]
+Description=Ejecuta backup diario del diario personal
+
+[Timer]
+OnCalendar=*-*-* 03:20:00
+Persistent=true
+Unit=diario-backup.service
+
+[Install]
+WantedBy=timers.target

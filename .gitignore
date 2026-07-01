@@ -12,6 +12,7 @@ app/data/
 data/*.sqlite
 data/*.sqlite-*
 data/attachments/
+data/backups/
 
 # Logs y diagnósticos
 logs/
